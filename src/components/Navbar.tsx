@@ -52,6 +52,15 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-6 text-[10px] font-bold tracking-widest uppercase text-gray-600 dark:text-gray-400">
+          {/* Search Button */}
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="flex items-center gap-1 hover:text-black dark:hover:text-white transition-colors cursor-pointer"
+          >
+            <span className="material-icons-outlined text-sm">search</span>
+            <span className="hidden sm:inline">Search</span>
+          </button>
+
           {/* Light/Dark Toggle Switch */}
           <button
             onClick={toggleTheme}
@@ -67,15 +76,6 @@ export default function Navbar() {
                 {darkMode ? "dark_mode" : "light_mode"}
               </span>
             </div>
-          </button>
-
-          {/* Search Button */}
-          <button
-            onClick={() => setIsSearchOpen(true)}
-            className="flex items-center gap-1 hover:text-black dark:hover:text-white transition-colors cursor-pointer"
-          >
-            <span className="material-icons-outlined text-sm">search</span>
-            <span className="hidden sm:inline">Search</span>
           </button>
 
           {/* Cart Icon-Only Button */}
