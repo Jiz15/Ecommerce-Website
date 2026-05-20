@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FACC15;
+  --color-background-light: #FFFFFF;
+  --color-background-dark: #0F0F0F;
+  --color-veson-gray: #F3F4F6;
+  --color-veson-dark: #1A1A1A;
+  
+  --font-display: var(--font-anton), sans-serif;
+  --font-sans: var(--font-inter), sans-serif;
+  
+  --radius-default: 0.5rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2.5rem;
+}
+
+/* Custom Styles from Mockup */
+.font-condensed {
+  font-family: var(--font-anton), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.ticker-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker {
+  display: inline-block;
+  animation: ticker 20s linear infinite;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.image-mask-circle {
+  clip-path: circle(50% at 50% 50%);
+}
+
+.product-card:hover .hover-overlay {
+  opacity: 1;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Smooth transitions */
+.transition-all-custom {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Body Styles overriding Geist default */
+body {
+  font-family: var(--font-inter), sans-serif;
+}
