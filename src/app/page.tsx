@@ -33,6 +33,7 @@ export default function Home() {
     ticker: true,
     newsletter: true,
   });
+  const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
 
   // Load customized layout configuration on client mount
   useEffect(() => {
@@ -82,8 +83,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Dynamic Header */}
-      <Navbar />
+      {/* Dynamic Header with customizer trigger */}
+      <Navbar onOpenCustomizer={() => setIsCustomizerOpen(true)} />
 
       {/* Main Content Sections */}
       <main className="flex-1">
@@ -100,6 +101,8 @@ export default function Home() {
 
       {/* Dynamic Atelier Customizer Drawer */}
       <LayoutCustomizer
+        isOpen={isCustomizerOpen}
+        onClose={() => setIsCustomizerOpen(false)}
         order={order}
         visibility={visibility}
         onOrderChange={handleOrderChange}

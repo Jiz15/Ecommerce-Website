@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 
-export default function Navbar() {
+export default function Navbar({ onOpenCustomizer }: { onOpenCustomizer?: () => void } = {}) {
   const { cartCount, setIsCartOpen } = useCart();
   const [darkMode, setDarkMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -77,6 +77,17 @@ export default function Navbar() {
               </span>
             </div>
           </button>
+
+          {/* Layout Settings Button */}
+          {onOpenCustomizer && (
+            <button
+              onClick={onOpenCustomizer}
+              className="hover:text-black dark:hover:text-white transition-colors relative flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer"
+              title="Customize Layout"
+            >
+              <span className="material-icons-outlined text-sm">tune</span>
+            </button>
+          )}
 
           {/* Cart Icon-Only Button */}
           <button
