@@ -34,6 +34,10 @@ export default function LayoutCustomizer({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
+  // Touch drag states for mobile support
+  const [touchStartIndex, setTouchStartIndex] = useState<number | null>(null);
+  const [touchCurrentIndex, setTouchCurrentIndex] = useState<number | null>(null);
+
   const handleMoveUp = (index: number) => {
     if (index === 0) return;
     const newOrder = [...order];
@@ -57,11 +61,10 @@ export default function LayoutCustomizer({
     onVisibilityChange(newVisibility);
   };
 
-  // Drag and drop handlers
+  // Drag and drop handlers (Desktop)
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = "move";
-    // Set a clean preview image if desired, otherwise default browser behavior
   };
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
@@ -86,6 +89,39 @@ export default function LayoutCustomizer({
     newOrder.splice(targetIndex, 0, draggedItem);
 
     onOrderChange(newOrder);
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  // Touch drag-and-drop handlers (Mobile)
+  const handleTouchStart = (e: React.TouchEvent, index: number) => {
+    setTouchStartIndex(index);
+    setDraggedIndex(index);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartIndex === null) return;
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    const cardElement = element?.closest("[data-index]");
+    if (cardElement) {
+      const overIndex = parseInt(cardElement.getAttribute("data-index") || "", 10);
+      if (!isNaN(overIndex) && overIndex !== touchCurrentIndex) {
+        setTouchCurrentIndex(overIndex);
+        setDragOverIndex(overIndex);
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartIndex !== null && touchCurrentIndex !== null && touchStartIndex !== touchCurrentIndex) {
+      const newOrder = [...order];
+      const [draggedItem] = newOrder.splice(touchStartIndex, 1);
+      newOrder.splice(touchCurrentIndex, 0, draggedItem);
+      onOrderChange(newOrder);
+    }
+    setTouchStartIndex(null);
+    setTouchCurrentIndex(null);
     setDraggedIndex(null);
     setDragOverIndex(null);
   };
@@ -127,7 +163,7 @@ export default function LayoutCustomizer({
               Drag & Drop Modules to Reorder
             </p>
             <p className="text-[8px] text-gray-400 mt-1 uppercase tracking-tight">
-              Tip: Click and drag any card. You can also use the up/down arrows.
+              Tip: Drag the handle (⠿) or use the arrows.
             </p>
           </div>
           <div className="space-y-3">
@@ -138,12 +174,13 @@ export default function LayoutCustomizer({
               return (
                 <div
                   key={id}
+                  data-index={index}
                   draggable
                   onDragStart={(e) => handleDragStart(e, index)}
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDragEnd={handleDragEnd}
                   onDrop={(e) => handleDrop(e, index)}
-                  className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 cursor-grab active:cursor-grabbing select-none group ${
+                  className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 select-none group ${
                     index === draggedIndex
                       ? "opacity-30 border-white/5 bg-white/1"
                       : index === dragOverIndex
@@ -154,7 +191,12 @@ export default function LayoutCustomizer({
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="material-icons-outlined text-gray-500 group-hover:text-primary transition-colors text-sm select-none">
+                    <span
+                      onTouchStart={(e) => handleTouchStart(e, index)}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
+                      className="material-icons-outlined text-gray-500 group-hover:text-primary transition-colors text-sm select-none p-1 cursor-grab active:cursor-grabbing touch-none"
+                    >
                       drag_handle
                     </span>
                     <div>

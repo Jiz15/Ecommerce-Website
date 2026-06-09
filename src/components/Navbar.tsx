@@ -140,6 +140,18 @@ export default function Navbar({ onOpenCustomizer }: { onOpenCustomizer?: () => 
             >
               Contact
             </a>
+            {onOpenCustomizer && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenCustomizer();
+                }}
+                className="flex items-center gap-1.5 hover:text-black dark:hover:text-white transition-colors text-[10px] font-bold tracking-widest uppercase text-left cursor-pointer"
+              >
+                <span className="material-icons-outlined text-sm">tune</span>
+                <span>Customize Layout</span>
+              </button>
+            )}
           </div>
         </div>
       )}
